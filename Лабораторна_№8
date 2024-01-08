@@ -1,0 +1,121 @@
+#include <iostream>
+#include <cstdlib>
+#include <ctime>
+
+// Функція для виведення елементів масиву на екран
+void printArray(int arr[], int size) {
+    for (int i = 0; i < size; i++) {
+        std::cout << arr[i] << " ";
+    }
+    std::cout << std::endl;
+}
+
+// Метод Хоара (Швидке сортування)
+void quickSort(int arr[], int low, int high) {
+    if (low < high) {
+        int pivot = arr[high]; // Вибір елемента, який буде служити опорним для поділу
+        int i = low - 1;
+
+        // Порівняння елементів та їх обмін, знаходження місця опорного елемента
+        for (int j = low; j <= high - 1; j++) {
+            if (arr[j] < pivot) {
+                i++;
+                std::swap(arr[i], arr[j]);
+            }
+        }
+
+        std::swap(arr[i + 1], arr[high]); // Поміщення опорного елемента на його правильне місце
+
+        // Рекурсивний виклик для сортування підмасивів
+        quickSort(arr, low, i);
+        quickSort(arr, i + 2, high);
+    }
+}
+
+// Злиття впорядкованих підмасивів для методу злиття
+void merge(int arr[], int low, int mid, int high) {
+    int n1 = mid - low + 1;
+    int n2 = high - mid;
+
+    int left[n1], right[n2];
+
+    // Копіювання елементів в тимчасові масиви
+    for (int i = 0; i < n1; i++)
+        left[i] = arr[low + i];
+    for (int j = 0; j < n2; j++)
+        right[j] = arr[mid + 1 + j];
+
+    int i = 0, j = 0, k = low;
+
+    // Злиття елементів в основний масив в порядку зростання
+    while (i < n1 && j < n2) {
+        if (left[i] <= right[j]) {
+            arr[k] = left[i];
+            i++;
+        } else {
+            arr[k] = right[j];
+            j++;
+        }
+        k++;
+    }
+
+    // Додавання залишкових елементів з тимчасових масивів
+    while (i < n1) {
+        arr[k] = left[i];
+        i++;
+        k++;
+    }
+    while (j < n2) {
+        arr[k] = right[j];
+        j++;
+        k++;
+    }
+}
+
+// Метод злиття
+void mergeSort(int arr[], int low, int high) {
+    if (low < high) {
+        int mid = low + (high - low) / 2;
+
+        // Рекурсивний виклик для сортування підмасивів
+        mergeSort(arr, low, mid);
+        mergeSort(arr, mid + 1, high);
+
+        // Злиття відсортованих підмасивів
+        merge(arr, low, mid, high);
+    }
+}
+
+int main() {
+    const int size = 6;
+    int arr[size];
+
+    // Встановлюємо початкове значення генератора випадкових чисел на основі поточного часу
+    srand(static_cast<unsigned>(time(0)));
+
+    // Заповнення масиву випадковими числами в діапазоні від 10 до 100
+    for (int i = 0; i < size; i++) {
+        arr[i] = rand() % 91 + 10;
+    }
+
+    std::cout << "Початковий масив: ";
+    printArray(arr, size);
+
+    // Копіювання масиву для обох методів сортування
+    int arr1[size];
+    for (int i = 0; i < size; i++) {
+        arr1[i] = arr[i];
+    }
+
+    // Сортування Хоара
+    quickSort(arr, 0, size - 1);
+    std::cout << "Метод Хоара: ";
+    printArray(arr, size);
+
+    // Сортування злиттям
+    mergeSort(arr1, 0, size - 1);
+    std::cout << "Метод злиття: ";
+    printArray(arr1, size);
+
+    return 0;
+}
