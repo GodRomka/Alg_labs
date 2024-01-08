@@ -1,0 +1,58 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+// Функція для знаходження максимального елемента в масиві
+double find_max_element(double A[][5], int N, int M) {
+    double max_element = A[0][0];
+    for (int i = 0; i < N; i++) {
+        for (int j = 0; j < M; j++) {
+            if (A[i][j] > max_element) {
+                max_element = A[i][j];
+            }
+        }
+    }
+    return max_element;
+}
+
+int main() {
+    int N = 4;
+    int M = 5;
+
+    // Оголошення та ініціалізація двовимірного масиву
+    double A[N][5] = {
+        {1.2, 3.4, 2.1, 4.7, 5.3},
+        {0.9, 2.8, 6.7, 3.2, 1.6},
+        {4.5, 2.2, 3.3, 5.5, 6.6},
+        {7.7, 8.8, 9.9, 10.0, 11.1}
+    };
+
+    // Знаходимо максимальний елемент
+    double max_element = find_max_element(A, N, M);
+
+    // Визначаємо кількість елементів в динамічному масиві
+    int dynamic_count = N * M - 1; // -1 для виключення максимального елемента
+
+    // Виділяємо пам'ять для динамічного масиву
+    double* P = (double*)malloc(dynamic_count * sizeof(double));
+
+    // Копіюємо всі елементи без максимального в динамічний масив
+    int index = 0;
+    for (int i = 0; i < N; i++) {
+        for (int j = 0; j < M; j++) {
+            if (A[i][j] != max_element) {
+                P[index] = A[i][j];
+                index++;
+            }
+        }
+    }
+
+    // Виведення результатів
+    printf("Максимальний елемент: %.1lf\n", max_element); // Формат "%.1lf" виведе число з 1 знаком після коми
+    printf("Елементи без максимального в динамічному масиві: ");
+    for (int i = 0; i < dynamic_count; i++) {
+        printf("%.1lf ", P[i]);
+    }
+    printf("\n");
+
+    return 0;
+}
