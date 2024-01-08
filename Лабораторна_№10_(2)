@@ -1,0 +1,71 @@
+#include <iostream>
+
+// Функція для створення префікс-функції для масиву P
+void computeLPSArray(char P[], int m, int lps[]) {
+    int len = 0;
+    lps[0] = 0;  // Перший елемент завжди 0
+
+    for (int i = 1; i < m; ) {
+        if (P[i] == P[len]) {
+            len++;
+            lps[i] = len;
+            i++;
+        } else {
+            if (len != 0) {
+                len = lps[len - 1];
+            } else {
+                lps[i] = 0;
+                i++;
+            }
+        }
+    }
+}
+
+// Функція для пошуку першого входження масиву P у масиві S за допомого алгоритму KMP
+int KMPSearch(char S[], int n, char P[], int m) {
+    int lps[m];
+    computeLPSArray(P, m, lps);
+
+    int i = 0;  // Індекс для масиву S
+    int j = 0;  // Індекс для масиву P
+
+    while (i < n) {
+        if (P[j] == S[i]) {
+            i++;
+            j++;
+        }
+
+        if (j == m) {
+            return i - j;  // Знайдено входження, повертаємо індекс початку
+        } else if (i < n && P[j] != S[i]) {
+            if (j != 0) {
+                j = lps[j - 1];
+            } else {
+                i++;
+            }
+        }
+    }
+
+    return -1;  // Входження не знайдено
+}
+
+int main() {
+    const int n = 10;
+    const int m = 5;
+
+    char S[n + 1] = "qwertyuiop";  // Масив S (текст)
+    char P[m + 1] = "rtyui";       // Масив P (слово для пошуку)
+
+    std::cout << "Масив S: " << S << std::endl;
+    std::cout << "Масив P: " << P << std::endl;
+
+    int result = KMPSearch(S, n, P, m);
+
+    if (result != -1) {
+        std::cout << "Перше входження слова P у текст S знаходиться за індексом: " << result << std::endl;
+    } else {
+        std::cout << "Слово P не знаходиться у тексті S." << std::endl;
+    }
+
+    return 0;
+}
