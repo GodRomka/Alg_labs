@@ -1,0 +1,54 @@
+#include <iostream>
+#include <fstream>
+#include <vector>
+#include <algorithm>
+#include <Windows.h>
+
+using namespace std;
+
+int main() {
+    SetConsoleCP(1251);
+    SetConsoleOutputCP(1251);
+
+    // Відкриваємо файл для читання
+    ifstream inputFile("input.txt");
+
+    // Перевіряємо, чи вдалося відкрити файл
+    if (!inputFile.is_open()) {
+        cerr << "Не вдалося відкрити файл input.txt" << std::endl;
+        return 1;
+    }
+
+    // Зчитуємо число C з клавіатури
+    double C;
+    cout << "Введіть число C: ";
+    cin >> C;
+
+    // Очікуємо, що файл містить дійсні числа, розділені пробілами
+    double number;
+    vector<double> resultVector;
+
+    // Зчитуємо числа з файлу та додаємо їх до вектора
+    while (inputFile >> number) {
+        resultVector.push_back(number);
+    }
+
+    // Закриваємо файл
+    inputFile.close();
+
+    // Вставляємо число C у вектор
+    resultVector.push_back(C);
+
+    // Сортуємо вектор
+    sort(resultVector.begin(), resultVector.end());
+
+    // Виводимо числа в консоль
+    cout << "Відсортований результат: ";
+    for (const auto& num : resultVector) {
+        cout << num << " ";
+    }
+
+    cout << "\n";
+
+    return 0;
+}
